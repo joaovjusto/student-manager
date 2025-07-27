@@ -6,7 +6,7 @@ const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
     <div className="relative w-full overflow-auto">
       <table
         ref={ref}
-        className={clsx("w-full caption-bottom text-sm", className)}
+        className={clsx("w-full caption-bottom text-sm table", className)}
         {...props}
       />
     </div>
@@ -16,7 +16,7 @@ Table.displayName = "Table"
 
 const TableHeader = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
   ({ className, ...props }, ref) => (
-    <thead ref={ref} className={clsx("[&_tr]:border-b", className)} {...props} />
+    <thead ref={ref} className={clsx("[&_tr]:border-b dark:[&_tr]:border-spotify-highlight", className)} {...props} />
   )
 )
 TableHeader.displayName = "TableHeader"
@@ -36,7 +36,7 @@ const TableFooter = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTable
   ({ className, ...props }, ref) => (
     <tfoot
       ref={ref}
-      className={clsx("border-t bg-gray-100/50 dark:bg-gray-800/50 font-medium [&>tr]:last:border-b-0", className)}
+      className={clsx("border-t bg-gray-100/50 dark:bg-spotify-highlight font-medium [&>tr]:last:border-b-0", className)}
       {...props}
     />
   )
@@ -48,7 +48,7 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
     <tr
       ref={ref}
       className={clsx(
-        "border-b border-gray-200 dark:border-gray-700 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50 data-[state=selected]:bg-gray-50 dark:data-[state=selected]:bg-gray-800",
+        "table-row border-b border-gray-200 dark:border-spotify-highlight transition-colors hover:bg-gray-50 dark:hover:bg-spotify-highlight data-[state=selected]:bg-gray-50 dark:data-[state=selected]:bg-spotify-highlight",
         className
       )}
       {...props}
@@ -62,7 +62,7 @@ const TableHead = forwardRef<HTMLTableCellElement, ThHTMLAttributes<HTMLTableCel
     <th
       ref={ref}
       className={clsx(
-        "h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pr-0",
+        "h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-spotify-text-subdued [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
@@ -75,7 +75,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TdHTMLAttributes<HTMLTableCel
   ({ className, ...props }, ref) => (
     <td
       ref={ref}
-      className={clsx("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+      className={clsx("p-4 align-middle dark:text-spotify-text-base [&:has([role=checkbox])]:pr-0", className)}
       {...props}
     />
   )
@@ -86,7 +86,7 @@ const TableCaption = forwardRef<HTMLTableCaptionElement, HTMLAttributes<HTMLTabl
   ({ className, ...props }, ref) => (
     <caption
       ref={ref}
-      className={clsx("mt-4 text-sm text-gray-500 dark:text-gray-400", className)}
+      className={clsx("mt-4 text-sm text-gray-500 dark:text-spotify-text-subdued", className)}
       {...props}
     />
   )

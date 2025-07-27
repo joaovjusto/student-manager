@@ -1,41 +1,40 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
   darkMode: 'class',
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
-          DEFAULT: '#2563eb',
-          hover: '#1d4ed8'
-        }
+        spotify: {
+          green: '#1DB954',
+          'green-hover': '#1ed760',
+          black: '#191414',
+          white: '#FFFFFF',
+          base: '#121212',
+          elevated: '#282828',
+          highlight: '#3E3E3E',
+          'text-base': '#FFFFFF',
+          'text-bright': '#FFFFFF',
+          'text-subdued': '#A7A7A7',
+          gray: {
+            100: '#F5F5F5',
+            200: '#EEEEEE',
+            300: '#E0E0E0',
+            400: '#BDBDBD',
+            500: '#9E9E9E',
+            600: '#757575',
+            700: '#616161',
+            800: '#424242',
+            900: '#212121',
+          },
+        },
       },
       borderRadius: {
-        'xl': '1rem',
-        '2xl': '1.5rem',
-      },
-      animation: {
-        'fade-in': 'fade-in 0.2s ease-in-out',
-      },
-      keyframes: {
-        'fade-in': {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
+        DEFAULT: '0.5rem',
+        'full': '9999px',
       },
     },
   },

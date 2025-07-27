@@ -6,7 +6,7 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={clsx(
-        "rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm",
+        "rounded-xl border border-gray-200 bg-white card dark:border-transparent dark:bg-spotify-elevated",
         className
       )}
       {...props}
@@ -26,7 +26,7 @@ const CardTitle = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLHeadingEle
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={clsx("text-2xl font-semibold leading-none tracking-tight", className)}
+      className={clsx("text-2xl font-semibold leading-none tracking-tight dark:text-spotify-text-bright", className)}
       {...props}
     />
   )
@@ -35,7 +35,7 @@ CardTitle.displayName = "CardTitle"
 
 const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={clsx("text-sm text-gray-500 dark:text-gray-400", className)} {...props} />
+    <p ref={ref} className={clsx("text-sm text-gray-500 dark:text-spotify-text-subdued", className)} {...props} />
   )
 )
 CardDescription.displayName = "CardDescription"

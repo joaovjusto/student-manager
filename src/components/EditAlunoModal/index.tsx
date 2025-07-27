@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAlunosStore, selectLoading } from '../../stores/alunos'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -82,6 +82,9 @@ export function EditAlunoModal({ aluno, open, onOpenChange }: EditAlunoModalProp
             <User className="h-5 w-5 text-primary" />
             {t('students.edit.title')}
           </DialogTitle>
+          <DialogDescription>
+            {t('students.edit.description', { name: aluno?.nome })}
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">

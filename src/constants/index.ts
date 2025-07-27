@@ -1,6 +1,8 @@
 export const ROUTES = {
   HOME: '/',
   CADASTRO: '/cadastro',
+  LOGIN: '/login',
+  SIGNUP: '/signup',
 } as const
 
 export const STORAGE_KEYS = {

@@ -44,6 +44,7 @@ export default {
       },
       edit: {
         title: 'Edit Student',
+        description: 'Update information for student {{name}}',
         successMessage: 'Student successfully updated!'
       },
       delete: {

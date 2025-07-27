@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import type { AlunosState, AlunosActions, AlunoInput } from './types'
 import { alunosService } from '../../services/alunosService'
+import { useAuth } from '../../hooks/useAuth'
 
 type AlunosStore = AlunosState & AlunosActions
 
@@ -12,10 +13,13 @@ export const useAlunosStore = create<AlunosStore>()(
     error: null,
 
     initialize: async () => {
+      const { currentUser } = useAuth()
+      if (!currentUser) return
+
       set({ loading: true, error: null })
       
       try {
-        const unsubscribe = alunosService.subscribeToChanges((alunos) => {
+        const unsubscribe = alunosService.subscribeToChanges(currentUser.uid, (alunos) => {
           set({ alunos, loading: false, error: null })
         })
 
@@ -29,10 +33,18 @@ export const useAlunosStore = create<AlunosStore>()(
     },
 
     addAluno: async (aluno: AlunoInput) => {
+      const { currentUser } = useAuth()
+      if (!currentUser) {
+        throw new Error('Usuário não autenticado')
+      }
+
       set({ loading: true, error: null })
       
       try {
-        await alunosService.add(aluno)
+        await alunosService.add({
+          ...aluno,
+          userId: currentUser.uid
+        })
       } catch (error) {
         set({ 
           loading: false,
@@ -43,10 +55,18 @@ export const useAlunosStore = create<AlunosStore>()(
     },
 
     updateAluno: async (id: string, aluno: AlunoInput) => {
+      const { currentUser } = useAuth()
+      if (!currentUser) {
+        throw new Error('Usuário não autenticado')
+      }
+
       set({ loading: true, error: null })
       
       try {
-        await alunosService.update(id, aluno)
+        await alunosService.update(id, {
+          ...aluno,
+          userId: currentUser.uid
+        })
       } catch (error) {
         set({ 
           loading: false,
@@ -57,10 +77,15 @@ export const useAlunosStore = create<AlunosStore>()(
     },
 
     deleteAluno: async (id: string) => {
+      const { currentUser } = useAuth()
+      if (!currentUser) {
+        throw new Error('Usuário não autenticado')
+      }
+
       set({ loading: true, error: null })
       
       try {
-        await alunosService.delete(id)
+        await alunosService.delete(id, currentUser.uid)
       } catch (error) {
         set({ 
           loading: false,
@@ -71,10 +96,15 @@ export const useAlunosStore = create<AlunosStore>()(
     },
 
     refresh: async () => {
+      const { currentUser } = useAuth()
+      if (!currentUser) {
+        throw new Error('Usuário não autenticado')
+      }
+
       set({ loading: true, error: null })
       
       try {
-        const alunos = await alunosService.getAll()
+        const alunos = await alunosService.getAll(currentUser.uid)
         set({ alunos, loading: false, error: null })
       } catch (error) {
         set({ 

@@ -2,14 +2,16 @@ import { Button } from '../ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { LanguageSelector } from '../LanguageSelector'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useAuth } from '../../hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Users, List, UserPlus, Sun, Moon, Menu } from 'lucide-react'
+import { Users, List, UserPlus, Sun, Moon, Menu, LogOut } from 'lucide-react'
 import { ROUTES } from '../../constants'
 import { useState } from 'react'
 
 export function TopBar() {
   const { theme, toggleTheme } = useTheme()
+  const { logout } = useAuth()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
@@ -17,6 +19,11 @@ export function TopBar() {
   const isDark = theme === 'dark'
 
   const isActive = (path: string) => location.pathname === path
+
+  const handleLogout = async () => {
+    await logout()
+    navigate(ROUTES.LOGIN)
+  }
 
   const menuItems = [
     {
@@ -96,6 +103,22 @@ export function TopBar() {
             <div className="hidden sm:block">
               <LanguageSelector />
             </div>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLogout}
+                  className="w-8 h-8 sm:w-9 sm:h-9"
+                >
+                  <LogOut className="h-4 w-4 sm:h-[1.2rem] sm:w-[1.2rem]" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Sair</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
 
@@ -117,6 +140,18 @@ export function TopBar() {
                 </Button>
               ))}
               
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  handleLogout()
+                  setMobileMenuOpen(false)
+                }}
+                className="gap-3 justify-start text-sm py-3 h-auto"
+              >
+                <LogOut className="h-4 w-4" />
+                Sair
+              </Button>
+
               <div className="px-3 py-2">
                 <LanguageSelector />
               </div>

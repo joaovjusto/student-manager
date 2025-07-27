@@ -3,6 +3,7 @@ import type { BaseEntity } from '../../types'
 export interface Aluno extends BaseEntity {
   readonly nome: string
   readonly idade: number
+  readonly userId: string
 }
 
 export type AlunoInput = Omit<Aluno, 'id'>

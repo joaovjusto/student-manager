@@ -4,11 +4,11 @@
 
 @layer base {
   body {
-    @apply antialiased text-gray-800 dark:text-gray-200;
+    @apply antialiased text-gray-800 dark:text-spotify-text-base bg-white dark:bg-spotify-base;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-semibold tracking-tight dark:text-spotify-text-bright;
   }
 }
 
@@ -19,5 +19,34 @@
 
   .form-field {
     @apply flex flex-col gap-2;
+  }
+
+  /* Card styles */
+  .dark .card {
+    @apply bg-spotify-elevated hover:bg-spotify-highlight transition-colors;
+  }
+
+  /* Button styles */
+  .dark .button-primary {
+    @apply bg-spotify-green hover:bg-spotify-green-hover text-white;
+  }
+
+  /* Input styles */
+  .dark .input {
+    @apply bg-spotify-highlight border-spotify-highlight text-spotify-text-base placeholder-spotify-text-subdued;
+  }
+
+  /* Table styles */
+  .dark .table {
+    @apply bg-spotify-elevated;
+  }
+  
+  .dark .table-row {
+    @apply hover:bg-spotify-highlight transition-colors;
+  }
+
+  /* Dialog styles */
+  .dark .dialog {
+    @apply bg-spotify-elevated;
   }
 } 
