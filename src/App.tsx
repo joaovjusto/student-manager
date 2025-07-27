@@ -7,9 +7,28 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import { TopBar } from './components/TopBar'
 import { ListagemAlunos } from './pages/ListagemAlunos'
 import { CadastroAluno } from './pages/CadastroAluno'
+import { useFirebaseStore } from './hooks/useFirebaseStore'
 import { ROUTES } from './constants'
 import './i18n'
 import './index.css'
+
+function AppContent() {
+  useFirebaseStore()
+
+  return (
+    <div className="h-screen flex flex-col bg-white dark:bg-gray-900">
+      <TopBar />
+      <main className="flex-1 overflow-auto">
+        <div className="page-container py-6">
+          <Routes>
+            <Route path={ROUTES.HOME} element={<ListagemAlunos />} />
+            <Route path={ROUTES.CADASTRO} element={<CadastroAluno />} />
+          </Routes>
+        </div>
+      </main>
+    </div>
+  )
+}
 
 function App() {
   return (
@@ -17,17 +36,7 @@ function App() {
       <TooltipProvider>
         <ToastProvider>
           <BrowserRouter>
-            <div className="h-screen flex flex-col bg-white dark:bg-gray-900">
-              <TopBar />
-              <main className="flex-1 overflow-auto">
-                <div className="page-container py-6">
-                  <Routes>
-                    <Route path={ROUTES.HOME} element={<ListagemAlunos />} />
-                    <Route path={ROUTES.CADASTRO} element={<CadastroAluno />} />
-                  </Routes>
-                </div>
-              </main>
-            </div>
+            <AppContent />
             <Toaster />
             <ToastViewport />
             {import.meta.env.DEV && <StorageDebug />}

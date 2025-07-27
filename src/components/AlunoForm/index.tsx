@@ -4,39 +4,53 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Card, CardContent } from '../ui/card'
-import { User, Calendar } from 'lucide-react'
+import { User, Calendar, Check, X, Loader2 } from 'lucide-react'
 import { useTheme } from '../../contexts/ThemeContext'
 import { useTranslation } from 'react-i18next'
 import type { Aluno, AlunoInput } from '../../stores/alunos'
 
 interface AlunoFormProps {
   aluno?: Partial<Aluno>
-  onSubmit: (aluno: AlunoInput) => void
+  onSubmit: (aluno: AlunoInput) => void | Promise<void>
   onCancel?: () => void
   submitLabel?: 'students.form.submit' | 'students.form.save'
+  disabled?: boolean
 }
 
 export function AlunoForm({
   aluno = {},
   onSubmit,
   onCancel,
-  submitLabel = 'students.form.submit'
+  submitLabel = 'students.form.submit',
+  disabled = false
 }: AlunoFormProps) {
   const [formData, setFormData] = useState({
     nome: aluno.nome || '',
     idade: aluno.idade || 0
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { theme } = useTheme()
   const { t } = useTranslation()
   const isDark = theme === 'dark'
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!formData.nome.trim()) return
+    if (!formData.nome.trim() || isSubmitting || disabled) return
 
-    onSubmit(formData)
-    setFormData({ nome: '', idade: 0 })
+    setIsSubmitting(true)
+    try {
+      await onSubmit(formData)
+      if (!aluno.id) {
+        setFormData({ nome: '', idade: 0 })
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
+
+  const isLoading = isSubmitting || disabled
 
   return (
     <Card className="w-full max-w-md mx-auto animate-fade-in">
@@ -54,6 +68,7 @@ export function AlunoForm({
                 onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
                 placeholder={t('students.form.name.placeholder')}
                 className="pl-10"
+                disabled={isLoading}
                 required
               />
             </div>
@@ -74,22 +89,39 @@ export function AlunoForm({
                 min={0}
                 max={150}
                 className="pl-10"
+                disabled={isLoading}
                 required
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-2 pt-4">
-            <Button type="submit" className="w-full">
-              {t(submitLabel)}
+            <Button 
+              type="submit" 
+              className="w-full gap-2" 
+              disabled={isLoading || !formData.nome.trim()}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4" />
+                  {t(submitLabel)}
+                </>
+              )}
             </Button>
             {onCancel && (
               <Button
                 type="button"
                 variant="outline"
-                className="w-full"
+                className="w-full gap-2"
                 onClick={onCancel}
+                disabled={isLoading}
               >
+                <X className="h-4 w-4" />
                 {t('common.cancel')}
               </Button>
             )}

@@ -1,31 +1,101 @@
-import { createPersistentStore } from '../../hooks/usePersistentStore'
+import { create } from 'zustand'
+import { subscribeWithSelector } from 'zustand/middleware'
 import type { AlunosState, AlunosActions, AlunoInput } from './types'
-import { STORAGE_KEYS } from '../../constants'
+import { alunosService } from '../../services/alunosService'
 
 type AlunosStore = AlunosState & AlunosActions
 
-const generateId = (): string => crypto.randomUUID()
-
-export const useAlunosStore = createPersistentStore<AlunosStore>(
-  (set) => ({
+export const useAlunosStore = create<AlunosStore>()(
+  subscribeWithSelector((set, get) => ({
     alunos: [],
+    loading: false,
+    error: null,
 
-    addAluno: (aluno: AlunoInput) =>
-      set((state) => ({
-        alunos: [...state.alunos, { ...aluno, id: generateId() }],
-      })),
+    initialize: async () => {
+      set({ loading: true, error: null })
+      
+      try {
+        const unsubscribe = alunosService.subscribeToChanges((alunos) => {
+          set({ alunos, loading: false, error: null })
+        })
 
-    deleteAluno: (id: string) =>
-      set((state) => ({
-        alunos: state.alunos.filter((aluno) => aluno.id !== id),
-      })),
+        set({ _unsubscribe: unsubscribe })
+      } catch (error) {
+        set({ 
+          loading: false, 
+          error: error instanceof Error ? error.message : 'Erro desconhecido'
+        })
+      }
+    },
 
-    updateAluno: (id: string, alunoAtualizado: AlunoInput) =>
-      set((state) => ({
-        alunos: state.alunos.map((aluno) =>
-          aluno.id === id ? { ...alunoAtualizado, id } : aluno
-        ),
-      })),
-  }),
-  STORAGE_KEYS.ALUNOS_STORE
+    addAluno: async (aluno: AlunoInput) => {
+      set({ loading: true, error: null })
+      
+      try {
+        await alunosService.add(aluno)
+      } catch (error) {
+        set({ 
+          loading: false,
+          error: error instanceof Error ? error.message : 'Erro ao adicionar aluno'
+        })
+        throw error
+      }
+    },
+
+    updateAluno: async (id: string, aluno: AlunoInput) => {
+      set({ loading: true, error: null })
+      
+      try {
+        await alunosService.update(id, aluno)
+      } catch (error) {
+        set({ 
+          loading: false,
+          error: error instanceof Error ? error.message : 'Erro ao atualizar aluno'
+        })
+        throw error
+      }
+    },
+
+    deleteAluno: async (id: string) => {
+      set({ loading: true, error: null })
+      
+      try {
+        await alunosService.delete(id)
+      } catch (error) {
+        set({ 
+          loading: false,
+          error: error instanceof Error ? error.message : 'Erro ao deletar aluno'
+        })
+        throw error
+      }
+    },
+
+    refresh: async () => {
+      set({ loading: true, error: null })
+      
+      try {
+        const alunos = await alunosService.getAll()
+        set({ alunos, loading: false, error: null })
+      } catch (error) {
+        set({ 
+          loading: false,
+          error: error instanceof Error ? error.message : 'Erro ao carregar dados'
+        })
+      }
+    },
+
+    clearError: () => {
+      set({ error: null })
+    },
+
+    cleanup: () => {
+      const state = get()
+      if (state._unsubscribe) {
+        state._unsubscribe()
+        set({ _unsubscribe: undefined })
+      }
+    },
+
+    _unsubscribe: undefined,
+  }))
 ) 

@@ -47,7 +47,8 @@ export default {
         successMessage: 'Aluno atualizado com sucesso!'
       },
       delete: {
-        confirm: 'Deseja realmente excluir o aluno {{name}}?'
+        confirm: 'Deseja realmente excluir o aluno {{name}}?',
+        successMessage: 'Aluno excluído com sucesso!'
       }
     }
   }

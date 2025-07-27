@@ -47,7 +47,8 @@ export default {
         successMessage: 'Student successfully updated!'
       },
       delete: {
-        confirm: 'Do you really want to delete the student {{name}}?'
+        confirm: 'Do you really want to delete the student {{name}}?',
+        successMessage: 'Student successfully deleted!'
       }
     }
   }
